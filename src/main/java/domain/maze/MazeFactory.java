@@ -23,8 +23,8 @@ public class MazeFactory {
         walls4.add(Walls.WEST);
 
         cells.add(new Cell(new Position(0, 0), walls1));
-        cells.add(new Cell(new Position(0, 1), walls2));
-        cells.add(new Cell(new Position(1, 0), walls3));
+        cells.add(new Cell(new Position(1, 0), walls2));
+        cells.add(new Cell(new Position(0, 1), walls3));
         cells.add(new Cell(new Position(1, 1), walls4));
 
         return new Maze(cells);
