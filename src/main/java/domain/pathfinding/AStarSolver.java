@@ -5,9 +5,7 @@ import domain.maze.Maze;
 import domain.maze.Position;
 import domain.maze.Walls;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AStarSolver {
@@ -28,14 +26,55 @@ public class AStarSolver {
     }
 
     public Path solve(){
+        calculateCellScoresToEnd();
+        return calculatePath();
+    }
+
+    private Path calculatePath() {
+        Path path = new Path();
+        while(!current.equals(start)){
+            Cell currentCell = maze.getCellByPosition(current);
+            path.addToStart(current);
+
+            List<Position> possibleSteps = new LinkedList<>();
+            if(!currentCell.getWalls().contains(Walls.NORTH)){
+                possibleSteps.add(new Position(current.getX(), current.getY() - 1));
+            }
+            if(!currentCell.getWalls().contains(Walls.EAST)){
+                possibleSteps.add(new Position(current.getX() + 1, current.getY()));
+            }
+            if(!currentCell.getWalls().contains(Walls.SOUTH)){
+                possibleSteps.add(new Position(current.getX(), current.getY() + 1));
+            }
+            if(!currentCell.getWalls().contains(Walls.WEST)){
+                possibleSteps.add(new Position(current.getX() - 1, current.getY()));
+            }
+
+            possibleSteps = possibleSteps.stream().filter((step) -> !path.contains(step)).collect(Collectors.toList());
+
+            Cell min = maze.getCellByPosition(possibleSteps.get(0));
+            for (Position step : possibleSteps){
+                Cell cell = maze.getCellByPosition(step);
+
+                if(cellScores.containsKey(cell) && cellScores.containsKey(min) && !path.contains(step)){
+                    if(cellScores.get(min).getGCost() > cellScores.get(cell).getGCost()){
+                        min = cell;
+                    }
+                }
+
+            }
+            current = min.getPosition();
+        }
+        path.addToStart(start);
+        return path;
+    }
+
+    private void calculateCellScoresToEnd(){
         setStartCellScore();
         while(!current.equals(end)){
             calculateNeighbors();
             calculateNextPosition();
         }
-
-        System.out.println(cellScores);
-        return null;
     }
 
     private void setStartCellScore(){
@@ -99,7 +138,6 @@ public class AStarSolver {
 
         current = min.getKey().getPosition();
         min.getValue().setVisited(true);
-
     }
 
     private double pythagoras(int a, int b){

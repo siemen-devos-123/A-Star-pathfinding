@@ -10,7 +10,7 @@ public class Solver {
         this.algorithm = algorithm;
     }
 
-    public void solve(Maze maze, Position start, Position end){
-        algorithm.findPath(maze, start, end);
+    public Path solve(Maze maze, Position start, Position end){
+        return algorithm.findPath(maze, start, end);
     }
 }

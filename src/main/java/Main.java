@@ -10,6 +10,7 @@ public class Main {
         System.out.println(maze);
 
         Solver solver = new Solver(new AStar());
-        solver.solve(maze, new Position(0, 0), new Position(1, 1));
+        Object solution = solver.solve(maze, new Position(0, 0), new Position(1, 1));
+        System.out.println(solution);
     }
 }
